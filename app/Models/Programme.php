@@ -12,6 +12,7 @@ class Programme extends Model
         'name',
         'accreditationStatus',
         'approvedStream',
+        'yearApproved',
         'yearGrantedInterimOrAccredition',
         'faculty',
         'expirationDate',

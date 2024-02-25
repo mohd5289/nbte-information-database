@@ -5,4 +5,5 @@ abstract class Status{
     const ACCREDITED = "Accredited";
     const INTERIM =    "Interim";
     const EXPIRED =   "Expired";
+    const APPROVED = "Approved";
 }
