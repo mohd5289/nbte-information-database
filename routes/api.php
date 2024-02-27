@@ -27,7 +27,7 @@ Route::get('/all-institutions-and-programmes', [saveDirectoryProgrammesControlle
 
 Route::post('/all-institutions', [InstitutionController::class, 'saveAllInstitutions']);
 Route::post('/all-programmes', [ProgrammesController::class,'addAllProgrammes']);
-
+Route::get('/all-Programmes', [ProgrammesController::class, 'getAllProgrammes']);
 // Route::get('/save-one-institution', [saveDirectoryProgrammesController::class, 'storeFirstProgramme']);
 
 // Route::get('/save-remaining-institutions',[saveDirectoryProgrammesController::class, 'storeRemainingProgrammesInAuchi']);
