@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('allprogrammes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->boolean('isTechnologyBased')->nullable()->default(null);
+            $table->string('isTechnologyBased')->nullable()->default("");
             $table->string('faculty');
             $table->timestamps();
         });
