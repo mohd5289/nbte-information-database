@@ -41,7 +41,13 @@ class ProgrammesController extends Controller
 
 
 
+public function getAllProgrammes(){
 
+    $programs = Allprogrammes::all();
+
+    // Return the programs as a JSON response
+    return response()->json(['programs' => $programs], 200);
+}
 
 
 
