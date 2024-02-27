@@ -2,16 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Allprogrammes;
 use App\Models\Institution;
 use App\Models\Programme;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProgrammesController extends Controller
 {
-    //
-    public function createInstitutionWithProgrammes(Request $request)
-{
-    // Validate incoming request data
+  
+   public function addAllProgrammes(Request $request){
+    $validator = Validator::make($request->all(), [
+        'programs' => 'required|array',
+        'programs.*.name' => 'required|string',
+        'programs.*.isTechnologyBased' => 'required|string',
+        'programs.*.faculty' => 'required|string',
+    ]);
+
+    // If validation fails, return error response
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 400);
+    }
+
+    // Store each programme in the database
+    foreach ($request->programs as $programData) {
+        // You may need to adjust this based on your Programme model
+        Allprogrammes::create([
+            'name' => $programData['name'],
+            'is_technology_based' => $programData['isTechnologyBased'],
+            'faculty' => $programData['faculty'],
+            // Add other fields if needed
+        ]);
+    }
+
+    // Return success response
+    return response()->json(['message' => 'Programmes added successfully'], 201);
+   } 
+
+
+
+
+
+
+
+public function createInstitutionWithProgrammes(Request $request){
     $validatedData = $request->validate([
         'institution_name' => 'required|string',
         'programmes' => 'required|array',
@@ -25,6 +59,7 @@ class ProgrammesController extends Controller
         'programmes.*.isTechnologyBased' => 'required|boolean', // Add this rule
         // Add other validation rules as needed
     ]);
+
     $existingInstitution = Institution::where('name', $validatedData['institution_name'])->first();
 
     if ($existingInstitution) {
@@ -37,13 +72,6 @@ class ProgrammesController extends Controller
             // Add other institution attributes here
         ]);
     }
-    // // Create the institution
-    // $institution = Institution::create([
-    //     'name' => $validatedData['institution_name'],
-    //     // Add other institution attributes here
-    // ]);
-
-    // Create programmes for the institution
     foreach ($validatedData['programmes'] as $programmeData) {
         // Calculate numberOfStudents based on isTechnologyBased
         // $numberOfStudents = $programmeData['approvedStream'] * ($programmeData['isTechnologyBased'] ? 40 : 60);
@@ -64,7 +92,11 @@ class ProgrammesController extends Controller
         // Associate the programme with the institution
         $institution->programmes()->save($programme);
     }
-
     return response()->json(['message' => 'Institution and programmes created successfully'], 201);
 }
+     
+//  public function createInstitutionWithProgrammes(Request $request){
+//     // Validate incoming request data
+   
+// }
 }

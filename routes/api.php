@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\ProgrammesController;
 use App\Http\Controllers\saveDirectoryProgrammesController;
+use App\Models\Allprogrammes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +24,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('/create-institution-with-programmes', [ProgrammesController::class, 'createInstitutionWithProgrammes']);
 Route::get('/all-institutions-and-programmes', [saveDirectoryProgrammesController::class, 'getAllInstitutionsAndProgrammes']);
+
+Route::post('/all-institutions', [InstitutionController::class, 'saveAllInstitutions']);
+Route::post('/all-programmes', [ProgrammesController::class,'addAllProgrammes']);
+
 // Route::get('/save-one-institution', [saveDirectoryProgrammesController::class, 'storeFirstProgramme']);
 
 // Route::get('/save-remaining-institutions',[saveDirectoryProgrammesController::class, 'storeRemainingProgrammesInAuchi']);
