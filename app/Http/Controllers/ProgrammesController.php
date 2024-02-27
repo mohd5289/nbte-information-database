@@ -29,7 +29,7 @@ class ProgrammesController extends Controller
         // You may need to adjust this based on your Programme model
         Allprogrammes::create([
             'name' => $programData['name'],
-            'is_technology_based' => $programData['isTechnologyBased'],
+            'isTechnologyBased' => $programData['isTechnologyBased'],
             'faculty' => $programData['faculty'],
             // Add other fields if needed
         ]);
