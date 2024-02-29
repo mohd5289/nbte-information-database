@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('programmes', function (Blueprint $table) {
             //
+            $table->dropColumn(['faculty', 'isTechnologyBased', 'expirationDate']);
         });
     }
 
@@ -23,6 +24,9 @@ return new class extends Migration
     {
         Schema::table('programmes', function (Blueprint $table) {
             //
+            $table->string('faculty');
+            $table->boolean('isTechnologyBased');
+            $table->date('expirationDate');
         });
     }
 };
