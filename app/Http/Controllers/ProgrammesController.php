@@ -60,9 +60,7 @@ public function createInstitutionWithProgrammes(Request $request){
         'programmes.*.yearApproved' => 'required|integer',
         'programmes.*.accreditationStatus' => 'required|string',
         'programmes.*.approvedStream' => 'required|integer',
-        'programmes.*.faculty' => 'required|string',
-        'programmes.*.expirationDate' => 'required|date',
-        'programmes.*.isTechnologyBased' => 'required|boolean', // Add this rule
+        // Add this rule
         // Add other validation rules as needed
     ]);
 
@@ -81,16 +79,28 @@ public function createInstitutionWithProgrammes(Request $request){
     foreach ($validatedData['programmes'] as $programmeData) {
         // Calculate numberOfStudents based on isTechnologyBased
         // $numberOfStudents = $programmeData['approvedStream'] * ($programmeData['isTechnologyBased'] ? 40 : 60);
-
+        $expirationDate = null;
+        switch ($programmeData['accreditationStatus']) {
+            case 'Accredited':
+                $expirationDate = date('Y-m-d', strtotime('+5 years', strtotime($programmeData['yearGrantedInterimOrAccredition'] . '-10-01')));
+                break;
+            case 'Interim':
+                $expirationDate = date('Y-m-d', strtotime('+1 year', strtotime($programmeData['yearGrantedInterimOrAccredition'] . '-10-01')));
+                break;
+            case 'Approved':
+                $expirationDate = date('Y-m-d', strtotime('+2 years', strtotime($programmeData['yearGrantedInterimOrAccredition'] . '-10-01')));
+                break;
+            // Add more cases if needed for other accreditation statuses
+        }
+    
         $programme = new Programme([
             'name' => $programmeData['name'],
             'yearGrantedInterimOrAccredition' => $programmeData['yearGrantedInterimOrAccredition'],
             'yearApproved' => $programmeData['yearApproved'],
             'accreditationStatus' => $programmeData['accreditationStatus'],
             'approvedStream' => $programmeData['approvedStream'],
-            'faculty' => $programmeData['faculty'],
-            'expirationDate' => $programmeData['expirationDate'],
-            'isTechnologyBased' => $programmeData['isTechnologyBased'], // Add isTechnologyBased
+            'expirationDate' => $expirationDate,
+             // Add isTechnologyBased
             // 'numberOfStudents' => $numberOfStudents, // Add numberOfStudents
             // Add other programme attributes here
         ]);
