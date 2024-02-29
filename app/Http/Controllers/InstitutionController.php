@@ -35,7 +35,13 @@ class InstitutionController extends Controller
 
    } 
 
+   public function getAllInstitutions(){
 
+    $institutions = AllInstitutions::all();
+
+    // Return the programs as a JSON response
+    return response()->json(['institutions' => $institutions], 200);
+}
     public function index()
     {
         $institutions = Institution::all();

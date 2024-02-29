@@ -5,6 +5,7 @@ use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\ProgrammesController;
 use App\Http\Controllers\saveDirectoryProgrammesController;
 use App\Models\Allprogrammes;
+use App\Models\Institution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,7 +30,7 @@ Route::post('/all-institutions', [InstitutionController::class, 'saveAllInstitut
 Route::post('/all-programmes', [ProgrammesController::class,'addAllProgrammes']);
 Route::get('/all-Programmes', [ProgrammesController::class, 'getAllProgrammes']);
 // Route::get('/save-one-institution', [saveDirectoryProgrammesController::class, 'storeFirstProgramme']);
-
+Route::get('/all-Institutions', [InstitutionController::class,'getAllInstitutions']);
 // Route::get('/save-remaining-institutions',[saveDirectoryProgrammesController::class, 'storeRemainingProgrammesInAuchi']);
 
 // Route::get('/save-kadpoly-institutions', [saveDirectoryProgrammesController::class, 'saveKadunaPolytechnicProgrammes']);
