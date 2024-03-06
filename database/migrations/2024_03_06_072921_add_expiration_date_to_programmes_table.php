@@ -15,7 +15,7 @@ return new class extends Migration
             //
             Schema::table('programmes', function (Blueprint $table) {
                 // Drop the column if it exists
-                $table->dropColumn('expirationDate');
+                $table->date('expirationDate')->nullable();
             });
         });
     }
