@@ -59,7 +59,7 @@ public function createInstitutionWithProgrammes(Request $request){
         'programmes.*.yearGrantedInterimOrAccredition' => 'required|integer',
         'programmes.*.yearApproved' => 'required|integer',
         'programmes.*.accreditationStatus' => 'required|string',
-        'programmes.*.approvedStream' => 'required|integer',
+        'programmes.*.approvedStream' => 'required|integer|min:0',
         // Add this rule
         // Add other validation rules as needed
     ]);
@@ -76,7 +76,12 @@ public function createInstitutionWithProgrammes(Request $request){
             // Add other institution attributes here
         ]);
     }
+    $uniqueProgramNames = [];
     foreach ($validatedData['programmes'] as $programmeData) {
+        if (in_array($programmeData['name'], $uniqueProgramNames)) {
+            return response()->json(['error' => 'Program with the same name already exists in this institution'], 400);
+        }
+        $uniqueProgramNames[] = $programmeData['name'];
         // Calculate numberOfStudents based on isTechnologyBased
         // $numberOfStudents = $programmeData['approvedStream'] * ($programmeData['isTechnologyBased'] ? 40 : 60);
         $expirationDate = null;
