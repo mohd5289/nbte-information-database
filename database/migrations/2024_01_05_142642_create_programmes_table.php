@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(Institution::class)->onDelete('cascade');
             $table->string('name');
             $table->boolean('isTechnologyBased');
-            $table->integer('yearGrantedInterimOrAccredition');
+            $table->integer('yearGrantedInterimOrAccreditation');
             $table->string('accreditationStatus');
             $table->integer('approvedStream');
             $table->string('faculty');

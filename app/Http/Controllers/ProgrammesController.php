@@ -56,7 +56,7 @@ public function createInstitutionWithProgrammes(Request $request){
         'institution_name' => 'required|string',
         'programmes' => 'required|array',
         'programmes.*.name' => 'required|string',
-        'programmes.*.yearGrantedInterimOrAccredition' => 'required|integer',
+        'programmes.*.yearGrantedInterimOrAccreditation' => 'required|integer',
         'programmes.*.yearApproved' => 'required|integer',
         'programmes.*.accreditationStatus' => 'required|string',
         'programmes.*.approvedStream' => 'required|integer|min:0',
