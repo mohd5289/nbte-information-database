@@ -13,7 +13,7 @@ class MonotechnicProgramme extends Model
         'accreditationStatus',
         'approvedStream',
         'yearApproved',
-        'yearGrantedInterimOrAccredition',
+        'yearGrantedInterimOrAccreditation',
        
         // Add other attributes as needed
     ];
@@ -28,7 +28,7 @@ class MonotechnicProgramme extends Model
     }
     public function institution()
 {
-    return $this->belongsTo(Institution::class);
+    return $this->belongsTo(MonotechnicInstitution::class);
 }
 
 }
