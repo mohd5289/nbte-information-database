@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MonotechnicInstitution;
 use App\Models\MonotechnicProgramme;
-use App\Models\MonotechnicProgrammes;
+
 use Illuminate\Http\Request;
 
 class MonotechnicProgrammesController extends Controller
@@ -15,7 +15,7 @@ class MonotechnicProgrammesController extends Controller
             'institution_name' => 'required|string',
             'programmes' => 'required|array',
             'programmes.*.name' => 'required|string',
-            'programmes.*.yearGrantedInterimOrAccredition' => 'required|integer',
+            'programmes.*.yearGrantedInterimOrAccreditation' => 'required|integer',
             'programmes.*.yearApproved' => 'required|integer',
             'programmes.*.accreditationStatus' => 'required|string',
             'programmes.*.approvedStream' => 'required|integer|min:0',
@@ -46,20 +46,20 @@ class MonotechnicProgrammesController extends Controller
             $expirationDate = null;
             switch ($programmeData['accreditationStatus']) {
                 case 'Accredited':
-                    $expirationDate = date('Y-m-d', strtotime('+5 years', strtotime($programmeData['yearGrantedInterimOrAccredition'] . '-10-01')));
+                    $expirationDate = date('Y-m-d', strtotime('+5 years', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
                     break;
                 case 'Interim':
-                    $expirationDate = date('Y-m-d', strtotime('+1 year', strtotime($programmeData['yearGrantedInterimOrAccredition'] . '-10-01')));
+                    $expirationDate = date('Y-m-d', strtotime('+1 year', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
                     break;
                 case 'Approved':
-                    $expirationDate = date('Y-m-d', strtotime('+2 years', strtotime($programmeData['yearGrantedInterimOrAccredition'] . '-10-01')));
+                    $expirationDate = date('Y-m-d', strtotime('+2 years', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
                     break;
                 // Add more cases if needed for other accreditation statuses
             }
         
             $programme = new MonotechnicProgramme([
                 'name' => $programmeData['name'],
-                'yearGrantedInterimOrAccredition' => $programmeData['yearGrantedInterimOrAccredition'],
+                'yearGrantedInterimOrAccreditation' => $programmeData['yearGrantedInterimOrAccreditation'],
                 'yearApproved' => $programmeData['yearApproved'],
                 'accreditationStatus' => $programmeData['accreditationStatus'],
                 'approvedStream' => $programmeData['approvedStream'],
