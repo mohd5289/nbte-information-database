@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class VEI extends Model
 {
     use HasFactory;
+    protected $fillable = ['name'];
+    public function programmes()
+{
+    return $this->hasMany(VEIProgramme::class);
+}
 }

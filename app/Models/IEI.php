@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class IEI extends Model
 {
     use HasFactory;
+    protected $fillable = ['name'];
+    public function programmes()
+{
+    return $this->hasMany(IEIProgramme::class);
+}
 }

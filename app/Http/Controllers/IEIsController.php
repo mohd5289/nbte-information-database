@@ -9,6 +9,50 @@ use Illuminate\Http\Request;
 class IEIsController extends Controller
 {
     //
+    public function getAllInstitutionsAndProgrammes(Request $request)
+    {
+        $institutionsWithPrograms = IEI::with('programmes')->get();
+        $query = IEI::query();
+
+        // Filter by program name if provided
+        if ($request->has('programme_name_contains')) {
+            $query->whereHas('programmes', function ($subquery) use ($request) {
+                $subquery->where('name', 'like', '%' . $request->input('programme_name_contains') . '%');
+            });
+        }
+    
+        // Filter by program name that starts with a specific string
+        if ($request->has('programme_name_starts_with')&& $request->input('programme_name_starts_with') !=='none') {
+            $query->whereHas('programmes', function ($subquery) use ($request) {
+                $subquery->where('name', 'like', $request->input('programme_name_starts_with') . '%');
+            });
+        }
+    
+        // Filter by accreditation status
+        if ($request->has('accreditation_status') && $request->input('accreditation_status') !== 'all') {
+            $query->whereHas('programmes', function ($subquery)  use ($request) {
+                $subquery->where('accreditationStatus', $request->input('accreditation_status'));
+            });
+        }
+    
+        // Filter by number of streams
+        if ($request->has('streams') && $request->input('streams') !== 'any') {
+            $query->whereHas('programmes', function ($subquery) use ($request) {
+                $subquery->where('approvedStream', $request->input('streams'));
+            });
+        }
+        $institutionsWithPrograms = $query->get();
+        $data = [];
+
+        foreach ($institutionsWithPrograms as $institution) {
+            $data[] = [
+                'institution_name' => $institution->name,
+                'programmes' => $institution->programmes->toArray(),
+            ];
+        }
+
+        return response()->json(['data' => $data]);
+    }
     public function createInstitutionWithProgrammes(Request $request){
         $validatedData = $request->validate([
             'institution_name' => 'required|string',

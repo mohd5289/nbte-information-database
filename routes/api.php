@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\IEIsController;
 use App\Http\Controllers\InstitutionController;
-use App\Http\Controllers\ProgrammeController;
+use App\Http\Controllers\MonotechnicProgrammesController;
+
 use App\Http\Controllers\ProgrammesController;
-use App\Http\Controllers\saveDirectoryProgrammesController;
-use App\Models\Allprogrammes;
-use App\Models\Institution;
+
+use App\Http\Controllers\TechnicalCollegesController;
+use App\Http\Controllers\VEIsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +26,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::post('/create-institution-with-programmes', [ProgrammesController::class, 'createInstitutionWithProgrammes']);
-Route::get('/all-institutions-and-programmes', [saveDirectoryProgrammesController::class, 'getAllInstitutionsAndProgrammes']);
+Route::get('/all-institutions-and-programmes', [ProgrammesController::class, 'getAllInstitutionsAndProgrammes']);
+
+Route::get('/all-monotechnic-institutions-and-programmes', [MonotechnicProgrammesController::class, 'getAllInstitutionsAndProgrammes']);
+Route::get('/all-technical-colleges-institutions-and-programmes', [TechnicalCollegesController::class, 'getAllInstitutionsAndProgrammes']);
+Route::get('/all-iei-institutions-and-programmes', [IEIsController::class, 'getAllInstitutionsAndProgrammes']);
+Route::get('/all-vei-institutions-and-programmes', [VEIsController::class, 'getAllInstitutionsAndProgrammes']);
+
 
 Route::post('/all-institutions', [InstitutionController::class, 'saveAllInstitutions']);
 Route::post('/all-programmes', [ProgrammesController::class,'addAllProgrammes']);
