@@ -87,20 +87,20 @@ public function createInstitutionWithProgrammes(Request $request){
         $expirationDate = null;
         switch ($programmeData['accreditationStatus']) {
             case 'Accredited':
-                $expirationDate = date('Y-m-d', strtotime('+5 years', strtotime($programmeData['yearGrantedInterimOrAccredition'] . '-10-01')));
+                $expirationDate = date('Y-m-d', strtotime('+5 years', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
                 break;
             case 'Interim':
-                $expirationDate = date('Y-m-d', strtotime('+1 year', strtotime($programmeData['yearGrantedInterimOrAccredition'] . '-10-01')));
+                $expirationDate = date('Y-m-d', strtotime('+1 year', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
                 break;
             case 'Approved':
-                $expirationDate = date('Y-m-d', strtotime('+2 years', strtotime($programmeData['yearGrantedInterimOrAccredition'] . '-10-01')));
+                $expirationDate = date('Y-m-d', strtotime('+2 years', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
                 break;
             // Add more cases if needed for other accreditation statuses
         }
     
         $programme = new Programme([
             'name' => $programmeData['name'],
-            'yearGrantedInterimOrAccredition' => $programmeData['yearGrantedInterimOrAccredition'],
+            'yearGrantedInterimOrAccreditation' => $programmeData['yearGrantedInterimOrAccreditation'],
             'yearApproved' => $programmeData['yearApproved'],
             'accreditationStatus' => $programmeData['accreditationStatus'],
             'approvedStream' => $programmeData['approvedStream'],
