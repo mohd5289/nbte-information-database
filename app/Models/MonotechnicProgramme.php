@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Programme extends Model
+class MonotechnicProgramme extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -13,7 +13,7 @@ class Programme extends Model
         'accreditationStatus',
         'approvedStream',
         'yearApproved',
-        'yearGrantedInterimOrAccreditation',
+        'yearGrantedInterimOrAccredition',
        
         // Add other attributes as needed
     ];
