@@ -4,12 +4,109 @@ namespace App\Http\Controllers;
 
 use App\Models\MonotechnicInstitution;
 use App\Models\MonotechnicProgramme;
-
+use App\Models\Status;
+use App\Models\SubDepartment;
 use Illuminate\Http\Request;
 
 class MonotechnicProgrammesController extends Controller
 {
     //
+    public function getAllInstitutionsAndCollegeOfAgricultureProgrammes(Request $request)
+    {
+        $subDepartmentName = 'College of Agriculture';
+    
+        // Get the sub-department ID for College of Agriculture
+        $subDepartmentId = SubDepartment::where('name', $subDepartmentName)->value('id');
+    
+        $query = MonotechnicInstitution::query()->with(['programmes' => function ($query) use ($subDepartmentId) {
+            // Filter programmes by sub-department ID
+            $query->where('sub_department_id', $subDepartmentId);
+        }]);
+    
+        // Your existing filtering logic can remain unchanged
+    
+        // Execute the query
+        $institutionsWithPrograms = $query->get();
+    
+        $data = [];
+    
+        // Format the response data
+        foreach ($institutionsWithPrograms as $institution) {
+            $data[] = [
+                'institution_name' => $institution->name,
+                'programmes' => $institution->programmes->toArray(),
+            ];
+        }
+    
+        // Return the response
+        return response()->json(['data' => $data]);
+    }
+
+
+    public function getAllInstitutionsAndCollegeOfHealthSciencesProgrammes(Request $request)
+{
+    $subDepartmentName = 'College of Health Sciences';
+
+    // Get the sub-department ID for College of Agriculture
+    $subDepartmentId = SubDepartment::where('name', $subDepartmentName)->value('id');
+
+    $query = MonotechnicInstitution::query()->with(['programmes' => function ($query) use ($subDepartmentId) {
+        // Filter programmes by sub-department ID
+        $query->where('sub_department_id', $subDepartmentId);
+    }]);
+
+    // Your existing filtering logic can remain unchanged
+
+    // Execute the query
+    $institutionsWithPrograms = $query->get();
+
+    $data = [];
+
+    // Format the response data
+    foreach ($institutionsWithPrograms as $institution) {
+        $data[] = [
+            'institution_name' => $institution->name,
+            'programmes' => $institution->programmes->toArray(),
+        ];
+    }
+
+    // Return the response
+    return response()->json(['data' => $data]);
+}
+
+
+
+public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $request)
+{
+    $subDepartmentName = 'Specialised Institution';
+
+    // Get the sub-department ID for College of Agriculture
+    $subDepartmentId = SubDepartment::where('name', $subDepartmentName)->value('id');
+
+    $query = MonotechnicInstitution::query()->with(['programmes' => function ($query) use ($subDepartmentId) {
+        // Filter programmes by sub-department ID
+        $query->where('sub_department_id', $subDepartmentId);
+    }]);
+
+    // Your existing filtering logic can remain unchanged
+
+    // Execute the query
+    $institutionsWithPrograms = $query->get();
+
+    $data = [];
+
+    // Format the response data
+    foreach ($institutionsWithPrograms as $institution) {
+        $data[] = [
+            'institution_name' => $institution->name,
+            'programmes' => $institution->programmes->toArray(),
+        ];
+    }
+
+    // Return the response
+    return response()->json(['data' => $data]);
+}
+
     public function getAllInstitutionsAndProgrammes(Request $request)
     {
         $institutionsWithPrograms = MonotechnicInstitution::with('programmes')->get();
@@ -54,14 +151,14 @@ class MonotechnicProgrammesController extends Controller
 
         return response()->json(['data' => $data]);
     }  
-    public function createInstitutionWithProgrammes(Request $request){
+
+    public function createInstitutionWithCollegeOfAgricultureProgrammes(Request $request){
         $validatedData = $request->validate([
             'institution_name' => 'required|string',
             'programmes' => 'required|array',
             'programmes.*.name' => 'required|string',
             'programmes.*.yearGrantedInterimOrAccreditation' => 'required|integer',
             'programmes.*.yearApproved' => 'required|integer',
-            'programmes.*.accreditationStatus' => 'required|string',
             'programmes.*.approvedStream' => 'required|integer|min:0',
             // Add this rule
             // Add other validation rules as needed
@@ -79,6 +176,14 @@ class MonotechnicProgrammesController extends Controller
                 // Add other institution attributes here
             ]);
         }
+        $subDepartmentName = 'College of Agriculture'; // Assuming this is the sub-department name
+
+        $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
+    
+        if (!$subDepartment) {
+            // Create the sub-department if it doesn't exist
+            $subDepartment = SubDepartment::create(['name' => $subDepartmentName]);
+        }
         $uniqueProgramNames = [];
         foreach ($validatedData['programmes'] as $programmeData) {
             if (in_array($programmeData['name'], $uniqueProgramNames)) {
@@ -87,32 +192,42 @@ class MonotechnicProgrammesController extends Controller
             $uniqueProgramNames[] = $programmeData['name'];
             // Calculate numberOfStudents based on isTechnologyBased
             // $numberOfStudents = $programmeData['approvedStream'] * ($programmeData['isTechnologyBased'] ? 40 : 60);
-            $expirationDate = null;
-            switch ($programmeData['accreditationStatus']) {
-                case 'Accredited':
-                    $expirationDate = date('Y-m-d', strtotime('+5 years', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
-                    break;
-                case 'Interim':
-                    $expirationDate = date('Y-m-d', strtotime('+1 year', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
-                    break;
-                case 'Approved':
-                    $expirationDate = date('Y-m-d', strtotime('+2 years', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
-                    break;
-                // Add more cases if needed for other accreditation statuses
+            $expirationDate = $programmeData['expirationDate'];
+            $yearExpiration = date('Y', strtotime($expirationDate)); // Extract the year part from expirationDate
+            
+            $yearGranted = $programmeData['yearGrantedInterimOrAccreditation'];
+
+            // Calculate the gap in years
+            $gap = $yearExpiration - $yearGranted; // Gap in years
+            $currentDate = strtotime('now');
+            // Determine accreditationStatus based on the gap
+            if ($expirationDate < $currentDate) {
+                $accreditationStatus = Status::EXPIRED;
+            } elseif ($gap == 5) {
+                $accreditationStatus = Status::ACCREDITED;
+            } elseif ($gap == 2) {
+                $accreditationStatus = Status::APPROVED;
+            } elseif ($gap == 1) {
+                $accreditationStatus = Status::INTERIM;
+            } else {
+                // Reject as invalid input
+                return response()->json(['error' => 'Invalid gap between expirationDate and yearGrantedInterimOrAccreditation'], 400);
             }
-        
             $programme = new MonotechnicProgramme([
                 'name' => $programmeData['name'],
                 'yearGrantedInterimOrAccreditation' => $programmeData['yearGrantedInterimOrAccreditation'],
                 'yearApproved' => $programmeData['yearApproved'],
-                'accreditationStatus' => $programmeData['accreditationStatus'],
+                'accreditationStatus' => $accreditationStatus,
                 'approvedStream' => $programmeData['approvedStream'],
-                'expirationDate' => $expirationDate,
+                'expirationDate' => $programmeData['expirationDate'],
                  // Add isTechnologyBased
                 // 'numberOfStudents' => $numberOfStudents, // Add numberOfStudents
                 // Add other programme attributes here
             ]);
-    
+            $programme->subDepartment()->associate($subDepartment);
+
+            // Save the programme
+            $programme->save();
             // Associate the programme with the institution
             $institution->programmes()->save($programme);
         }
@@ -121,5 +236,178 @@ class MonotechnicProgrammesController extends Controller
 
 
 
+
+
+
+
+    public function createInstitutionWithCollegeOfHealthSciencesProgrammes(Request $request){
+        $validatedData = $request->validate([
+            'institution_name' => 'required|string',
+            'programmes' => 'required|array',
+            'programmes.*.name' => 'required|string',
+            'programmes.*.yearGrantedInterimOrAccreditation' => 'required|integer',
+            'programmes.*.yearApproved' => 'required|integer',
+           
+            'programmes.*.approvedStream' => 'required|integer|min:0',
+            // Add this rule
+            // Add other validation rules as needed
+        ]);
+    
+        $existingInstitution = MonotechnicInstitution::where('name', $validatedData['institution_name'])->first();
+    
+        if ($existingInstitution) {
+            // If institution with the same name exists, associate programmes with the existing institution
+            $institution = $existingInstitution;
+        } else {
+            // If institution with the same name doesn't exist, create a new one
+            $institution = MonotechnicInstitution::create([
+                'name' => $validatedData['institution_name'],
+                // Add other institution attributes here
+            ]);
+        }
+        $subDepartmentName = 'College of Health Sciences'; // Assuming this is the sub-department name
+
+        $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
+    
+        if (!$subDepartment) {
+            // Create the sub-department if it doesn't exist
+            $subDepartment = SubDepartment::create(['name' => $subDepartmentName]);
+        }
+        $uniqueProgramNames = [];
+        foreach ($validatedData['programmes'] as $programmeData) {
+            if (in_array($programmeData['name'], $uniqueProgramNames)) {
+                return response()->json(['error' => 'Program with the same name already exists in this institution'], 400);
+            }
+            $uniqueProgramNames[] = $programmeData['name'];
+            // Calculate numberOfStudents based on isTechnologyBased
+            // $numberOfStudents = $programmeData['approvedStream'] * ($programmeData['isTechnologyBased'] ? 40 : 60);
+            $expirationDate = $programmeData['expirationDate'];
+            $yearExpiration = date('Y', strtotime($expirationDate)); // Extract the year part from expirationDate
+            
+            $yearGranted = $programmeData['yearGrantedInterimOrAccreditation'];
+
+            // Calculate the gap in years
+            $gap = $yearExpiration - $yearGranted; // Gap in years
+            $currentDate = strtotime('now');
+            // Determine accreditationStatus based on the gap
+            if ($expirationDate < $currentDate) {
+                $accreditationStatus = Status::EXPIRED;
+            } elseif ($gap == 5) {
+                $accreditationStatus = Status::ACCREDITED;
+            } elseif ($gap == 2) {
+                $accreditationStatus = Status::APPROVED;
+            } elseif ($gap == 1) {
+                $accreditationStatus = Status::INTERIM;
+            } else {
+                // Reject as invalid input
+                return response()->json(['error' => 'Invalid gap between expirationDate and yearGrantedInterimOrAccreditation'], 400);
+            }
+            $programme = new MonotechnicProgramme([
+                'name' => $programmeData['name'],
+                'yearGrantedInterimOrAccreditation' => $programmeData['yearGrantedInterimOrAccreditation'],
+                'yearApproved' => $programmeData['yearApproved'],
+                'accreditationStatus' => $accreditationStatus,
+                'approvedStream' => $programmeData['approvedStream'],
+                'expirationDate' => $programmeData['expirationDate'],
+                 // Add isTechnologyBased
+                // 'numberOfStudents' => $numberOfStudents, // Add numberOfStudents
+                // Add other programme attributes here
+            ]);
+            $programme->subDepartment()->associate($subDepartment);
+
+            // Save the programme
+            $programme->save();
+            // Associate the programme with the institution
+            $institution->programmes()->save($programme);
+        }
+        return response()->json(['message' => 'Institution and programmes created successfully'], 201);
+    }
+
+
+
+
+
+    public function createInstitutionWithSpecialisedInstitutionProgrammes(Request $request){
+        $validatedData = $request->validate([
+            'institution_name' => 'required|string',
+            'programmes' => 'required|array',
+            'programmes.*.name' => 'required|string',
+            'programmes.*.yearGrantedInterimOrAccreditation' => 'required|integer',
+            'programmes.*.yearApproved' => 'required|integer',
+            'programmes.*.approvedStream' => 'required|integer|min:0',
+            'programmes.*.expirationDate' => 'required|date',
+            // Add this rule
+            // Add other validation rules as needed
+        ]);
+    
+        $existingInstitution = MonotechnicInstitution::where('name', $validatedData['institution_name'])->first();
+    
+        if ($existingInstitution) {
+            // If institution with the same name exists, associate programmes with the existing institution
+            $institution = $existingInstitution;
+        } else {
+            // If institution with the same name doesn't exist, create a new one
+            $institution = MonotechnicInstitution::create([
+                'name' => $validatedData['institution_name'],
+                // Add other institution attributes here
+            ]);
+        }
+        $subDepartmentName = 'Specialised Institution'; // Assuming this is the sub-department name
+
+        $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
+    
+        if (!$subDepartment) {
+            // Create the sub-department if it doesn't exist
+            $subDepartment = SubDepartment::create(['name' => $subDepartmentName]);
+        }
+        $uniqueProgramNames = [];
+        foreach ($validatedData['programmes'] as $programmeData) {
+            if (in_array($programmeData['name'], $uniqueProgramNames)) {
+                return response()->json(['error' => 'Program with the same name already exists in this institution'], 400);
+            }
+            $uniqueProgramNames[] = $programmeData['name'];
+            // Calculate numberOfStudents based on isTechnologyBased
+            // $numberOfStudents = $programmeData['approvedStream'] * ($programmeData['isTechnologyBased'] ? 40 : 60);
+            $expirationDate = $programmeData['expirationDate'];
+            $yearExpiration = date('Y', strtotime($expirationDate)); // Extract the year part from expirationDate
+            
+            $yearGranted = $programmeData['yearGrantedInterimOrAccreditation'];
+
+            // Calculate the gap in years
+            $gap = $yearExpiration - $yearGranted; // Gap in years
+            $currentDate = strtotime('now');
+            // Determine accreditationStatus based on the gap
+            if ($expirationDate < $currentDate) {
+                $accreditationStatus = Status::EXPIRED;
+            } elseif ($gap == 5) {
+                $accreditationStatus = Status::ACCREDITED;
+            } elseif ($gap == 2) {
+                $accreditationStatus = Status::APPROVED;
+            } elseif ($gap == 1) {
+                $accreditationStatus = Status::INTERIM;
+            } else {
+                // Reject as invalid input
+                return response()->json(['error' => 'Invalid gap between expirationDate and yearGrantedInterimOrAccreditation'], 400);
+            }
+            $programme = new MonotechnicProgramme([
+                'name' => $programmeData['name'],
+                'yearGrantedInterimOrAccreditation' => $programmeData['yearGrantedInterimOrAccreditation'],
+                'yearApproved' => $programmeData['yearApproved'],
+                'accreditationStatus' => $accreditationStatus,
+                'approvedStream' => $programmeData['approvedStream'],
+                'expirationDate' => $programmeData['expirationDate'],
+                 // Add isTechnologyBased
+                // 'numberOfStudents' => $numberOfStudents, // Add numberOfStudents
+                // Add other programme attributes here
+            ]);
+            $programme->subDepartment()->associate($subDepartment);
+
+            // Save the programme
+            $programme->save();
+            // Associate the programme with the institution
+            $institution->programmes()->save($programme);
+        }
+        return response()->json(['message' => 'Institution and programmes created successfully'], 201);
+    }
 
 }

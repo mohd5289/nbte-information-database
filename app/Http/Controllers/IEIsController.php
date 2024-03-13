@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\IEI;
 use App\Models\IEIProgramme;
+use App\Models\Status;
 use Illuminate\Http\Request;
 
 class IEIsController extends Controller
@@ -59,9 +60,8 @@ class IEIsController extends Controller
             'programmes' => 'required|array',
             'programmes.*.name' => 'required|string',
             'programmes.*.yearGrantedInterimOrAccreditation' => 'required|integer',
-            'programmes.*.yearApproved' => 'required|integer',
-            'programmes.*.accreditationStatus' => 'required|string',
             'programmes.*.approvedStream' => 'required|integer|min:0',
+            'programmes.*.expirationDate' => 'required|date',
             // Add this rule
             // Add other validation rules as needed
         ]);
@@ -86,27 +86,35 @@ class IEIsController extends Controller
             $uniqueProgramNames[] = $programmeData['name'];
             // Calculate numberOfStudents based on isTechnologyBased
             // $numberOfStudents = $programmeData['approvedStream'] * ($programmeData['isTechnologyBased'] ? 40 : 60);
-            $expirationDate = null;
-            switch ($programmeData['accreditationStatus']) {
-                case 'Accredited':
-                    $expirationDate = date('Y-m-d', strtotime('+5 years', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
-                    break;
-                case 'Interim':
-                    $expirationDate = date('Y-m-d', strtotime('+1 year', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
-                    break;
-                case 'Approved':
-                    $expirationDate = date('Y-m-d', strtotime('+2 years', strtotime($programmeData['yearGrantedInterimOrAccreditation'] . '-10-01')));
-                    break;
-                // Add more cases if needed for other accreditation statuses
+            $expirationDate = $programmeData['expirationDate'];
+            $yearExpiration = date('Y', strtotime($expirationDate)); // Extract the year part from expirationDate
+            
+            $yearGranted = $programmeData['yearGrantedInterimOrAccreditation'];
+
+            // Calculate the gap in years
+            $gap = $yearExpiration - $yearGranted; // Gap in years
+            $currentDate = strtotime('now');
+            // Determine accreditationStatus based on the gap
+            if ($expirationDate < $currentDate) {
+                $accreditationStatus = Status::EXPIRED;
+            } elseif ($gap == 5) {
+                $accreditationStatus = Status::ACCREDITED;
+            } elseif ($gap == 2) {
+                $accreditationStatus = Status::APPROVED;
+            } elseif ($gap == 1) {
+                $accreditationStatus = Status::INTERIM;
+            } else {
+                // Reject as invalid input
+                return response()->json(['error' => 'Invalid gap between expirationDate and yearGrantedInterimOrAccreditation'], 400);
             }
         
             $programme = new IEIProgramme([
                 'name' => $programmeData['name'],
                 'yearGrantedInterimOrAccreditation' => $programmeData['yearGrantedInterimOrAccreditation'],
                 'yearApproved' => $programmeData['yearApproved'],
-                'accreditationStatus' => $programmeData['accreditationStatus'],
+                'accreditationStatus' =>  $accreditationStatus,
                 'approvedStream' => $programmeData['approvedStream'],
-                'expirationDate' => $expirationDate,
+                'expirationDate' => $programmeData['expirationDate'],
                  // Add isTechnologyBased
                 // 'numberOfStudents' => $numberOfStudents, // Add numberOfStudents
                 // Add other programme attributes here

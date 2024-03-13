@@ -30,5 +30,8 @@ class MonotechnicProgramme extends Model
 {
     return $this->belongsTo(MonotechnicInstitution::class);
 }
-
+public function subDepartment()
+    {
+        return $this->belongsTo(SubDepartment::class);
+    }
 }
