@@ -12,6 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('monotechnic_programmes')) {
         Schema::create('monotechnic_programmes', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Institution::class)->onDelete('cascade');
@@ -24,7 +25,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-
+    }
     /**
      * Reverse the migrations.
      */
