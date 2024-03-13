@@ -12,6 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('i_e_i_programmes')) {
         Schema::create('i_e_i_programmes', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(IEI::class)->onDelete('cascade');
@@ -24,7 +25,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-
+    }
     /**
      * Reverse the migrations.
      */

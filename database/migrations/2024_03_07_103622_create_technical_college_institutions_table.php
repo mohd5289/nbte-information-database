@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('technical_college_institutions')) {
         Schema::create('technical_college_institutions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
         });
     }
-
+    }
     /**
      * Reverse the migrations.
      */

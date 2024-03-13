@@ -12,6 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('technical_college_programmes')) {
         Schema::create('technical_college_programmes', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(TechnicalCollegeInstitution::class)->onDelete('cascade');
@@ -24,7 +25,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-
+    }
     /**
      * Reverse the migrations.
      */
