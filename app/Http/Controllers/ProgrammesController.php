@@ -102,7 +102,6 @@ public function createInstitutionWithProgrammes(Request $request){
         'programmes.*.name' => 'required|string',
         'programmes.*.yearGrantedInterimOrAccreditation' => 'required|integer',
         'programmes.*.yearApproved' => 'required|integer',
-        
         'programmes.*.approvedStream' => 'required|integer|min:0',
         // Add this rule
         'programmes.*.expirationDate' => 'required|date',
@@ -138,6 +137,7 @@ public function createInstitutionWithProgrammes(Request $request){
             // Calculate the gap in years
             $gap = $yearExpiration - $yearGranted; // Gap in years
             $currentDate = strtotime('now');
+            $accreditationStatus="";
             // Determine accreditationStatus based on the gap
             if ($expirationDate < $currentDate) {
                 $accreditationStatus = Status::EXPIRED;
