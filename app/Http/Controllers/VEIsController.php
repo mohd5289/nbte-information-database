@@ -88,7 +88,7 @@ class VEIsController extends Controller
             $uniqueProgramNames[] = $programmeData['name'];
             // Calculate numberOfStudents based on isTechnologyBased
             // $numberOfStudents = $programmeData['approvedStream'] * ($programmeData['isTechnologyBased'] ? 40 : 60);
-            $expirationDate = $programmeData['expirationDate'];
+            $expirationDate = date('Y-m-d', strtotime($programmeData['expirationDate']));
             $yearExpiration = date('Y', strtotime($expirationDate)); // Extract the year part from expirationDate
             
             $yearGranted = $programmeData['yearGrantedInterimOrAccreditation'];
@@ -116,7 +116,7 @@ class VEIsController extends Controller
                 'yearApproved' => $programmeData['yearApproved'],
                 'accreditationStatus' => $accreditationStatus,
                 'approvedStream' => $programmeData['approvedStream'],
-                'expirationDate' => $programmeData['expirationDate'],
+                'expirationDate' =>$expirationDate,
                  // Add isTechnologyBased
                 // 'numberOfStudents' => $numberOfStudents, // Add numberOfStudents
                 // Add other programme attributes here
