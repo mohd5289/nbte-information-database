@@ -14,6 +14,7 @@ class Programme extends Model
         'approvedStream',
         'yearApproved',
         'yearGrantedInterimOrAccreditation',
+        'expirationDate'
        
         // Add other attributes as needed
     ];
