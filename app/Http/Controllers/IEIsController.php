@@ -60,6 +60,7 @@ class IEIsController extends Controller
             'programmes' => 'required|array',
             'programmes.*.name' => 'required|string',
             'programmes.*.yearGrantedInterimOrAccreditation' => 'required|integer',
+            'programmes.*.yearApproved' => 'required|integer',
             'programmes.*.approvedStream' => 'required|integer|min:0',
             'programmes.*.expirationDate' => 'required|date',
             // Add this rule
