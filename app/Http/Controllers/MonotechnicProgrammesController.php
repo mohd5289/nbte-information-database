@@ -179,12 +179,12 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
         }
         $subDepartmentName = 'College of Agriculture'; // Assuming this is the sub-department name
 
-        $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
+        // $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
     
-        if (!$subDepartment) {
+        
             // Create the sub-department if it doesn't exist
-            $subDepartment = SubDepartment::create(['name' => $subDepartmentName]);
-        }
+            $subDepartment = SubDepartment::firstOrCreate(['name' => $subDepartmentName]);
+        
         $uniqueProgramNames = [];
         foreach ($validatedData['programmes'] as $programmeData) {
             if (in_array($programmeData['name'], $uniqueProgramNames)) {
@@ -269,12 +269,12 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
         }
         $subDepartmentName = 'College of Health Sciences'; // Assuming this is the sub-department name
 
-        $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
+        // $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
     
-        if (!$subDepartment) {
+       
             // Create the sub-department if it doesn't exist
-            $subDepartment = SubDepartment::create(['name' => $subDepartmentName]);
-        }
+            $subDepartment = SubDepartment::firstOrCreate(['name' => $subDepartmentName]);
+        
         $uniqueProgramNames = [];
         foreach ($validatedData['programmes'] as $programmeData) {
             if (in_array($programmeData['name'], $uniqueProgramNames)) {
@@ -321,6 +321,7 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
             $programme->save();
             // Associate the programme with the institution
             $institution->programmes()->save($programme);
+            // $subDepartment->monotechnicProgrammes()->save($programme);
         }
         return response()->json(['message' => 'Institution and programmes created successfully'], 201);
     }
@@ -356,12 +357,12 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
         }
         $subDepartmentName = 'Specialised Institution'; // Assuming this is the sub-department name
 
-        $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
+        // $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
     
-        if (!$subDepartment) {
+        
             // Create the sub-department if it doesn't exist
-            $subDepartment = SubDepartment::create(['name' => $subDepartmentName]);
-        }
+            $subDepartment = SubDepartment::firstOrCreate(['name' => $subDepartmentName]);
+        
         $uniqueProgramNames = [];
         foreach ($validatedData['programmes'] as $programmeData) {
             if (in_array($programmeData['name'], $uniqueProgramNames)) {
