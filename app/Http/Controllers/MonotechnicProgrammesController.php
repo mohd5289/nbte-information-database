@@ -228,7 +228,7 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
             $programme->subDepartment()->associate($subDepartment);
 
             // Save the programme
-            $programme->save();
+            // $programme->save();
             // Associate the programme with the institution
             $institution->programmes()->save($programme);
         }
@@ -318,7 +318,7 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
             $programme->subDepartment()->associate($subDepartment);
 
             // Save the programme
-            $programme->save();
+            // $programme->save();
             // Associate the programme with the institution
             $institution->programmes()->save($programme);
             // $subDepartment->monotechnicProgrammes()->save($programme);
@@ -406,7 +406,7 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
             $programme->subDepartment()->associate($subDepartment);
         
             // Save the programme
-            $programme->save();
+            // $programme->save();
             // Associate the programme with the institution
             $institution->programmes()->save($programme);
         }
