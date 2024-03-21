@@ -165,18 +165,15 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
             // Add other validation rules as needed
         ]);
     
-        $existingInstitution = MonotechnicInstitution::where('name', $validatedData['institution_name'])->first();
+        // $existingInstitution = MonotechnicInstitution::where('name', $validatedData['institution_name'])->first();
     
-        if ($existingInstitution) {
-            // If institution with the same name exists, associate programmes with the existing institution
-            $institution = $existingInstitution;
-        } else {
+       
             // If institution with the same name doesn't exist, create a new one
-            $institution = MonotechnicInstitution::create([
+            $institution = MonotechnicInstitution::firstOrCreate([
                 'name' => $validatedData['institution_name'],
                 // Add other institution attributes here
             ]);
-        }
+        
         $subDepartmentName = 'College of Agriculture'; // Assuming this is the sub-department name
 
         // $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
@@ -255,18 +252,15 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
             // Add other validation rules as needed
         ]);
     
-        $existingInstitution = MonotechnicInstitution::where('name', $validatedData['institution_name'])->first();
+        // $existingInstitution = MonotechnicInstitution::where('name', $validatedData['institution_name'])->first();
     
-        if ($existingInstitution) {
-            // If institution with the same name exists, associate programmes with the existing institution
-            $institution = $existingInstitution;
-        } else {
+       
             // If institution with the same name doesn't exist, create a new one
-            $institution = MonotechnicInstitution::create([
+            $institution = MonotechnicInstitution::firstOrCreate([
                 'name' => $validatedData['institution_name'],
                 // Add other institution attributes here
             ]);
-        }
+        
         $subDepartmentName = 'College of Health Sciences'; // Assuming this is the sub-department name
 
         // $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
@@ -343,18 +337,15 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
             // Add other validation rules as needed
         ]);
     
-        $existingInstitution = MonotechnicInstitution::where('name', $validatedData['institution_name'])->first();
+        // $existingInstitution = MonotechnicInstitution::where('name', $validatedData['institution_name'])->first();
     
-        if ($existingInstitution) {
-            // If institution with the same name exists, associate programmes with the existing institution
-            $institution = $existingInstitution;
-        } else {
+       
             // If institution with the same name doesn't exist, create a new one
-            $institution = MonotechnicInstitution::create([
+            $institution = MonotechnicInstitution::firstOrCreate([
                 'name' => $validatedData['institution_name'],
                 // Add other institution attributes here
             ]);
-        }
+        
         $subDepartmentName = 'Specialised Institution'; // Assuming this is the sub-department name
 
         // $subDepartment = SubDepartment::where('name', $subDepartmentName)->first();
