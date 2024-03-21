@@ -160,6 +160,7 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
             'programmes.*.yearGrantedInterimOrAccreditation' => 'required|integer',
             'programmes.*.yearApproved' => 'required|integer',
             'programmes.*.approvedStream' => 'required|integer|min:0',
+            'programmes.*.expirationDate' => 'required|date',
             // Add this rule
             // Add other validation rules as needed
         ]);
@@ -249,6 +250,7 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
             'programmes.*.yearApproved' => 'required|integer',
            
             'programmes.*.approvedStream' => 'required|integer|min:0',
+            'programmes.*.expirationDate' => 'required|date',
             // Add this rule
             // Add other validation rules as needed
         ]);
