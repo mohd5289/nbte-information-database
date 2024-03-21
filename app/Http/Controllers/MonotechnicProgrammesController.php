@@ -227,11 +227,10 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
             ]);
             $programme->subDepartment()->associate($subDepartment);
 
-            $programme->institution()->associate($institution);
             // Save the programme
             $programme->save();
             // Associate the programme with the institution
-            // $institution->programmes()->save($programme);
+            $institution->programmes()->save($programme);
         }
         return response()->json(['message' => 'Institution and programmes created successfully'], 201);
     }
@@ -317,11 +316,11 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
                 // Add other programme attributes here
             ]);
             $programme->subDepartment()->associate($subDepartment);
-            $programme->institution()->associate($institution);
+
             // Save the programme
             $programme->save();
             // Associate the programme with the institution
-            // $institution->programmes()->save($programme);
+            $institution->programmes()->save($programme);
         }
         return response()->json(['message' => 'Institution and programmes created successfully'], 201);
     }
@@ -404,12 +403,11 @@ public function getAllInstitutionsAndSpecialisedInstitutionProgrammes(Request $r
                 // Add other programme attributes here
             ]);
             $programme->subDepartment()->associate($subDepartment);
-            
-            $programme->institution()->associate($institution);
+        
             // Save the programme
             $programme->save();
             // Associate the programme with the institution
-            // $institution->programmes()->save($programme);
+            $institution->programmes()->save($programme);
         }
         return response()->json(['message' => 'Institution and programmes created successfully'], 201);
     }
