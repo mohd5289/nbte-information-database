@@ -126,4 +126,21 @@ class IEIsController extends Controller
         }
         return response()->json(['message' => 'Institution and programmes created successfully'], 201);
     }
+
+    public function deleteIEIInstitution(Request $request)
+{
+    // Validate the request if needed
+
+    // Find the institution with the name "Afrihub Ict Institute, Abuja"
+    $institution = IEI::where('name', 'Afrihub Ict Institute, Abuja')->first();
+
+    if (!$institution) {
+        return response()->json(['error' => 'Institution not found'], 404);
+    }
+
+    // Delete the institution and cascade delete its associated programmes
+    $institution->delete();
+
+    return response()->json(['message' => 'IEI institution and associated programmes deleted successfully'], 200);
+}
 }

@@ -53,6 +53,11 @@ Route::post('/all-programmes', [ProgrammesController::class,'addAllProgrammes'])
 Route::get('/all-Programmes', [ProgrammesController::class, 'getAllProgrammes']);
 // Route::get('/save-one-institution', [saveDirectoryProgrammesController::class, 'storeFirstProgramme']);
 Route::get('/all-Institutions', [InstitutionController::class,'getAllInstitutions']);
+
+
+
+
+Route::delete('/iei-institution', [IEIsController::class, 'deleteIEIInstitution']);
 // Route::get('/save-remaining-institutions',[saveDirectoryProgrammesController::class, 'storeRemainingProgrammesInAuchi']);
 
 // Route::get('/save-kadpoly-institutions', [saveDirectoryProgrammesController::class, 'saveKadunaPolytechnicProgrammes']);
