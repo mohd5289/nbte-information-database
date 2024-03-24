@@ -57,7 +57,7 @@ Route::get('/all-Institutions', [InstitutionController::class,'getAllInstitution
 
 
 
-Route::delete('/iei-institution', [IEIsController::class, 'deleteIEIInstitution']);
+// Route::delete('/iei-institution', [IEIsController::class, 'deleteIEIInstitution']);
 // Route::get('/save-remaining-institutions',[saveDirectoryProgrammesController::class, 'storeRemainingProgrammesInAuchi']);
 
 // Route::get('/save-kadpoly-institutions', [saveDirectoryProgrammesController::class, 'saveKadunaPolytechnicProgrammes']);

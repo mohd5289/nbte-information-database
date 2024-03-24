@@ -100,6 +100,8 @@ class IEIsController extends Controller
                 $accreditationStatus = Status::EXPIRED;
             } elseif ($gap == 5) {
                 $accreditationStatus = Status::ACCREDITED;
+            } elseif ($programmeData['name'] && strpos($programmeData['name'], 'NVC') === 0 && $gap == 3) {
+                $accreditationStatus = Status::APPROVED;
             } elseif ($gap == 2) {
                 $accreditationStatus = Status::APPROVED;
             } elseif ($gap == 1) {
