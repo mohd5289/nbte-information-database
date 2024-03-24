@@ -101,7 +101,11 @@ class VEIsController extends Controller
                 $accreditationStatus = Status::EXPIRED;
             } elseif ($gap == 5) {
                 $accreditationStatus = Status::ACCREDITED;
-            } elseif ($gap == 2) {
+            } 
+            elseif ($programmeData['name'] && strpos($programmeData['name'], 'NVC') === 0 && $gap == 3) {
+                $accreditationStatus = Status::APPROVED;
+            }
+            elseif ($gap == 2) {
                 $accreditationStatus = Status::APPROVED;
             } elseif ($gap == 1) {
                 $accreditationStatus = Status::INTERIM;
