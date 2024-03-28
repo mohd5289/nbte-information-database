@@ -173,4 +173,21 @@ public function createInstitutionWithProgrammes(Request $request){
 //     // Validate incoming request data
    
 // }
+
+public function deleteUyoInstitution(Request $request)
+{
+    // Validate the request if needed
+
+    // Find the institution with the name "Afrihub Ict Institute, Abuja"
+    $institution = Institution::where('name', 'Uyo City Polytechnic, Uyo, Akwa Ibom, State')->first();
+
+    if (!$institution) {
+        return response()->json(['error' => 'Institution not found'], 404);
+    }
+
+    // Delete the institution and cascade delete its associated programmes
+    $institution->delete();
+
+    return response()->json(['message' => 'Institution and associated programmes deleted successfully'], 200);
+}
 }

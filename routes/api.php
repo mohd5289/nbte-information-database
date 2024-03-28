@@ -55,7 +55,7 @@ Route::get('/all-Programmes', [ProgrammesController::class, 'getAllProgrammes'])
 Route::get('/all-Institutions', [InstitutionController::class,'getAllInstitutions']);
 
 
-
+Route::delete('/uyo-institution', [ProgrammesController::class, 'deleteUyoInstitution']);
 
 // Route::delete('/iei-institution', [IEIsController::class, 'deleteIEIInstitution']);
 // Route::get('/save-remaining-institutions',[saveDirectoryProgrammesController::class, 'storeRemainingProgrammesInAuchi']);
