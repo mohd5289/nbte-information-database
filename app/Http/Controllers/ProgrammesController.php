@@ -120,10 +120,17 @@ public function createInstitutionWithProgrammes(Request $request){
             // Add other institution attributes here
         ]);
     }
+    $submittedProgrammeNames = collect($validatedData['programmes'])->pluck('name')->toArray();
+    if (count(array_unique($submittedProgrammeNames)) !== count($submittedProgrammeNames)) {
+        return response()->json(['error' => 'Duplicate programme names are not allowed in the submitted data'], 400);
+    }
     
     $uniqueProgramNames = [];
     foreach ($validatedData['programmes'] as $programmeData) {
         if (in_array($programmeData['name'], $uniqueProgramNames)) {
+            return response()->json(['error' => 'Program with the same name already exists in this institution'], 400);
+        }
+        if ($institution->programmes()->where('name', $programmeData['name'])->exists()) {
             return response()->json(['error' => 'Program with the same name already exists in this institution'], 400);
         }
         $uniqueProgramNames[] = $programmeData['name'];
