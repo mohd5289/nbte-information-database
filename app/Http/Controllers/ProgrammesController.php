@@ -124,7 +124,7 @@ public function createInstitutionWithProgrammes(Request $request){
     if (count(array_unique($submittedProgrammeNames)) !== count($submittedProgrammeNames)) {
         return response()->json(['error' => 'Duplicate programme names are not allowed in the submitted data'], 400);
     }
-    
+
     $uniqueProgramNames = [];
     foreach ($validatedData['programmes'] as $programmeData) {
         if (in_array($programmeData['name'], $uniqueProgramNames)) {
@@ -181,12 +181,12 @@ public function createInstitutionWithProgrammes(Request $request){
    
 // }
 
-public function deleteUyoInstitution(Request $request)
+public function deleteKanoStatePolyInstitution(Request $request)
 {
     // Validate the request if needed
 
     // Find the institution with the name "Afrihub Ict Institute, Abuja"
-    $institution = Institution::where('name', 'Uyo City Polytechnic, Uyo, Akwa Ibom, State')->first();
+    $institution = Institution::where('name', 'Kano State Polytechnic, Kano State')->first();
 
     if (!$institution) {
         return response()->json(['error' => 'Institution not found'], 404);
@@ -197,4 +197,5 @@ public function deleteUyoInstitution(Request $request)
 
     return response()->json(['message' => 'Institution and associated programmes deleted successfully'], 200);
 }
+// Kano State Polytechnic, Kano State
 }
