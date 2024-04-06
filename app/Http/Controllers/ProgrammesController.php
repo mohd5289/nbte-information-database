@@ -181,12 +181,12 @@ public function createInstitutionWithProgrammes(Request $request){
    
 // }
 
-public function deleteKanoStatePolyInstitution(Request $request)
+public function deleteAlhikmaPolyInstitution(Request $request)
 {
     // Validate the request if needed
 
     // Find the institution with the name "Afrihub Ict Institute, Abuja"
-    $institution = Institution::where('name', 'Kano State Polytechnic, Kano State')->first();
+    $institution = Institution::where('name', 'Al-hikma Polytechnic, Karu Nasarawa State')->first();
 
     if (!$institution) {
         return response()->json(['error' => 'Institution not found'], 404);
