@@ -34,7 +34,16 @@ class InstitutionController extends Controller
     return response()->json(['message' => 'Institutions added successfully'], 201);
 
    } 
-   public function updateInstitutionDetails(Request $request)
+
+   public function getAllInstitutions(){
+
+    $institutions = AllInstitutions::all();
+
+    // Return the programs as a JSON response
+    return response()->json(['institutions' => $institutions], 200);
+}
+
+public function updateInstitutionDetails(Request $request)
    {
        // Define validation rules array
        $rules = [
@@ -88,8 +97,7 @@ class InstitutionController extends Controller
        // Return success response
        return response()->json(['message' => 'Institution details updated successfully'], 200);
    }
-   
-   public function index()
+    public function index()
     {
         $institutions = Institution::all();
 
