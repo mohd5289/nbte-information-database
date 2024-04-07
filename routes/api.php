@@ -53,7 +53,7 @@ Route::post('/all-programmes', [ProgrammesController::class,'addAllProgrammes'])
 Route::get('/all-Programmes', [ProgrammesController::class, 'getAllProgrammes']);
 // Route::get('/save-one-institution', [saveDirectoryProgrammesController::class, 'storeFirstProgramme']);
 Route::get('/all-Institutions', [InstitutionController::class,'getAllInstitutions']);
-
+Route::post('/update-institution-details', [InstitutionController::class, 'updateInstitutionDetails']);
 
 // Route::delete('/Alhikmapoly-institution', [ProgrammesController::class, 'deleteAlhikmaPolyInstitution']);
 
