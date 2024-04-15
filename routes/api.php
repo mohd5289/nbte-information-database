@@ -55,7 +55,7 @@ Route::get('/all-Programmes', [ProgrammesController::class, 'getAllProgrammes'])
 Route::get('/all-Institutions', [InstitutionController::class,'getAllInstitutions']);
 Route::post('/update-institution-details', [InstitutionController::class, 'updateInstitutionDetails']);
 
-// Route::delete('/Alhikmapoly-institution', [ProgrammesController::class, 'deleteAlhikmaPolyInstitution']);
+Route::delete('/NuhuBamaliPoly-institution', [ProgrammesController::class, 'deleteNuhuBamaliPolyInstitution']);
 
 // Route::delete('/iei-institution', [IEIsController::class, 'deleteIEIInstitution']);
 // Route::get('/save-remaining-institutions',[saveDirectoryProgrammesController::class, 'storeRemainingProgrammesInAuchi']);
