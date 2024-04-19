@@ -48,29 +48,30 @@ public function updateInstitutionDetails(Request $request)
        // Define validation rules array
        $rules = [
            'name' => 'required|string', // Assuming 'name' is the institution name
-           'address' => 'nullable|string',
-           'year_established' => 'nullable|integer',
+           'address' => 'required|string',
+           'year_established' => 'required|integer',
+           'ownership' => 'required|string'
        ];
    
-       // Check the ownership type
+    //    Check the ownership type
        if ($request->ownership === 'Private') {
            // If ownership is private, add validation rules for proprietor and rector fields
-           $rules['proprietor_name'] = 'required|string';
-           $rules['proprietor_email'] = 'required|email';
-           $rules['proprietor_phone'] = 'required|string';
-           $rules['rector_name'] = 'required|string';
-           $rules['rector_email'] = 'required|email';
-           $rules['rector_phone'] = 'required|string';
+           $rules['proprietor_name'] = 'nullable|string';
+           $rules['proprietor_email'] = 'nullable|email';
+           $rules['proprietor_phone'] = 'nullable|string';
+           $rules['rector_name'] = 'nullable|string';
+           $rules['rector_email'] = 'nullable|email';
+           $rules['rector_phone'] = 'nullable|string';
            // Remove validation rules for registrar fields
            unset($rules['registrar_name'], $rules['registrar_email'], $rules['registrar_phone']);
        } else {
            // If ownership is federal or state, add validation rules for rector and registrar fields
-           $rules['rector_name'] = 'required|string';
-           $rules['rector_email'] = 'required|email';
-           $rules['rector_phone'] = 'required|string';
-           $rules['registrar_name'] = 'required|string';
-           $rules['registrar_email'] = 'required|email';
-           $rules['registrar_phone'] = 'required|string';
+           $rules['rector_name'] = 'nullable|string';
+           $rules['rector_email'] = 'nullable|email';
+           $rules['rector_phone'] = 'nullable|string';
+           $rules['registrar_name'] = 'nullable|string';
+           $rules['registrar_email'] = 'nullable|email';
+           $rules['registrar_phone'] = 'nullable|string';
            // Remove validation rules for proprietor fields
            unset($rules['proprietor_name'], $rules['proprietor_email'], $rules['proprietor_phone']);
        }
