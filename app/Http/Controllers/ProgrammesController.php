@@ -93,6 +93,69 @@ public function getAllProgrammes(){
     return response()->json(['programs' => $programs], 200);
 }
 
+public function updateInstitutionAndProgrammes(Request $request)
+{
+    // Validate the incoming request
+    $validatedData = $request->validate([
+        'institution_name' => 'required|string',
+        'programmes' => 'required|array',
+        'programmes.*.name' => 'required|string',
+        'programmes.*.yearGrantedInterimOrAccreditation' => 'required|integer',
+        'programmes.*.yearApproved' => 'required|integer',
+        'programmes.*.approvedStream' => 'required|integer|min:0',
+        'programmes.*.expirationDate' => 'required|date',
+        // Add other validation rules as needed
+    ]);
+
+    // Find the institution by its name
+    $institution = Institution::where('name', $validatedData['institution_name'])->first();
+
+    if (!$institution) {
+        return response()->json(['message' => 'Institution not found'], 404);
+    }
+
+    // Iterate over each program
+    foreach ($validatedData['programmes'] as $programData) {
+        // Find the program by its name under the given institution
+        $program = $institution->programmes()->where('name', $programData['name'])->first();
+
+        // Calculate the gap in years
+        $expirationDate = date('Y-m-d', strtotime($programData['expirationDate']));
+        $yearExpiration = date('Y', strtotime($expirationDate));
+        $yearGranted = $programData['yearGrantedInterimOrAccreditation'];
+        $gap = $yearExpiration - $yearGranted;
+
+        // Determine accreditationStatus based on the gap
+        if ($expirationDate < strtotime('now')) {
+            $accreditationStatus = Status::EXPIRED;
+        } elseif ($gap == 5) {
+            $accreditationStatus = Status::ACCREDITED;
+        } elseif ($gap == 2) {
+            $accreditationStatus = Status::APPROVED;
+        } elseif ($gap == 1) {
+            $accreditationStatus = Status::INTERIM;
+        } else {
+            return response()->json(['error' => 'Invalid gap between expirationDate and yearGrantedInterimOrAccreditation'], 400);
+        }
+
+        if ($program) {
+            // Update the program with the validated data
+            $program->fill([
+                'yearGrantedInterimOrAccreditation' => $programData['yearGrantedInterimOrAccreditation'],
+                'yearApproved' => $programData['yearApproved'],
+                'approvedStream' => $programData['approvedStream'],
+                'expirationDate' => $expirationDate,
+                'accreditationStatus' => $accreditationStatus,
+                // Add other program attributes here
+            ]);
+            $program->save();
+        } else {
+            return response()->json(['error' => 'Programme not found in the institution'], 400);
+        }
+    }
+
+    return response()->json(['message' => 'Programs updated successfully']);
+}
 
 
 public function createInstitutionWithProgrammes(Request $request){

@@ -28,6 +28,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('/create-institution-with-programmes', [ProgrammesController::class, 'createInstitutionWithProgrammes']);
 
+Route::put('/update-institution-with-programmes', [ProgrammesController::class, 'updateInstitutionAndProgrammes']);
+
 Route::post('/create-monotechnic-institution-with-college-of-agriculture-programmes', [MonotechnicProgrammesController::class, 'createInstitutionWithCollegeOfAgricultureProgrammes']);
 Route::post('/create-monotechnic-institution-with-college-of-health-sciences-programmes', [MonotechnicProgrammesController::class, 'createInstitutionWithCollegeOfHealthSciencesProgrammes']);
 Route::post('/create-monotechnic-institution-with-specialized-institution-programmes', [MonotechnicProgrammesController::class, 'createInstitutionWithSpecialisedInstitutionProgrammes']);
